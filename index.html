@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chocolates Tutoring - Study Portal</title>
+    <link id="page-favicon" rel="icon" href="https://ssl.gstatic.com/classroom/ic_product_classic_144.png">
+    <style>
+        :root {
+            --bg-color: #121212;
+            --panel-bg: #1e1e1e;
+            --card-bg: #252525;
+            --accent-color: #00ffcc;
+            --accent-hover: #00b38f;
+            --text-color: #ffffff;
+            --text-secondary: #a0a0a0;
+            --border-color: #333333;
+        }
+
+        [data-theme="milk"] {
+            --bg-color: #2c221e;
+            --panel-bg: #3b2e29;
+            --card-bg: #4a3b34;
+            --accent-color: #f4a261;
+            --accent-hover: #e76f51;
+            --text-color: #fdf0d5;
+            --text-secondary: #d8b4a0;
+            --border-color: #5c473f;
+        }
+
+        [data-theme="white"] {
+            --bg-color: #f0f2f5;
+            --panel-bg: #ffffff;
+            --card-bg: #ffffff;
+            --accent-color: #4f46e5;
+            --accent-hover: #4338ca;
+            --text-color: #1f2937;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--panel-bg);
+            border-bottom: 2px solid var(--border-color);
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-area h1 {
+            font-size: 1.3rem;
+            color: var(--accent-color);
+        }
+
+        .search-bar {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: var(--text-color);
+            width: 320px;
+            outline: none;
+        }
+
+        .search-bar:focus {
+            border-color: var(--accent-color);
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .main-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        sidebar {
+            width: 250px;
+            background-color: var(--panel-bg);
+            border-right: 2px solid var(--border-color);
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+        }
+
+        .category-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .cat-btn {
+            background: transparent;
+            color: var(--text-color);
+            border: none;
+            padding: 10px 12px;
+            border-radius: 6px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cat-btn:hover, .cat-btn.active {
+            background-color: var(--card-bg);
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 20px;
+        }
+
+        .game-card {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            border-color: var(--accent-color);
+        }
+
+        .game-banner {
+            height: 110px;
+            background: linear-gradient(135deg, #252525, #333333);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .game-info {
+            padding: 12px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .game-title {
+            font-size: 1.05rem;
+            font-weight: bold;
+        }
+
+        .game-cat {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        #gamePlayerView {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+            background-color: var(--panel-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .player-toolbar {
+            background-color: var(--card-bg);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .player-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--accent-color);
+        }
+
+        iframe {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            display: none;
+        }
+
+        .modal-content {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 12px;
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .modal-content h2 {
+            color: var(--accent-color);
+        }
+
+        .modal-content label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .modal-content select, .modal-content input {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 10px;
+            border-radius: 6px;
+            outline: none;
+            width: 100%;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <header>
+        <div class="logo-area">
+            <span style="font-size: 1.5rem;">📚</span>
+            <h1>Chocolates Tutoring</h1>
+        </div>
+        <input type="text" class="search-bar" id="searchInput" placeholder="Search games (Drift Boss, Drive Mad...)" oninput="filterGames()">
+        <div class="nav-controls">
+            <button class="nav-btn" onclick="openModal('requestModal')">💡 Request Game</button>
+            <button class="nav-btn" onclick="openModal('settingsModal')">⚙️ Settings</button>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <sidebar>
+            <span class="category-title">Categories</span>
+            <button class="cat-btn active" onclick="setCategory('all', this)">🔥 All Games</button>
+            <button class="cat-btn" onclick="setCategory('arcade', this)">🕹️ Arcade & Platformers</button>
+            <button class="cat-btn" onclick="setCategory('sports', this)">⚽ Sports & Racing</button>
+            <button class="cat-btn" onclick="setCategory('sandbox', this)">🧱 Sandbox & Clickers</button>
+        </sidebar>
+
+        <div class="content-area">
+            <div id="gameGridView">
+                <h2 style="margin-bottom: 15px; color: var(--text-color);">Game Library</h2>
+                <div class="game-grid" id="gameGrid"></div>
+            </div>
+
+            <div id="gamePlayerView">
+                <div class="player-toolbar">
+                    <span class="player-title" id="activeGameTitle">Game Player</span>
+                    <div class="player-actions">
+                        <button class="nav-btn" onclick="toggleFullscreen()">Fullscreen</button>
+                        <button class="nav-btn" onclick="closeGame()" style="background: #e63946; color: #fff; border:none;">✖ Close</button>
+                    </div>
+                </div>
+                <iframe id="gameFrame" src="" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Game Modal -->
+    <div class="modal" id="requestModal">
+        <div class="modal-content">
+            <h2>Request a Game</h2>
+            <label>Game Title</label>
+            <input type="text" id="reqGameTitle" placeholder="e.g. Minecraft Classic">
+            <button class="nav-btn" onclick="submitRequest()" style="background-color: var(--accent-color); color: var(--bg-color); border: none; font-weight: bold;">Submit Request</button>
+            <div class="modal-footer" style="display:flex; justify-content:flex-end; margin-top:5px;">
+                <button class="nav-btn" onclick="closeModal('requestModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <h2>Portal Settings</h2>
+            <label>Color Theme</label>
+            <select id="themeSelect" onchange="changeTheme(this.value)">
+                <option value="dark">Dark Neon</option>
+                <option value="milk">Milk Chocolate</option>
+                <option value="white">Clean Light</option>
+            </select>
+
+            <label>Tab Cloak Disguise</label>
+            <select id="cloakSelect" onchange="applyCloak(this.value)">
+                <option value="classroom">Google Classroom</option>
+                <option value="drive">Google Drive</option>
+                <option value="none">Normal</option>
+            </select>
+            <p style="font-size: 0.8rem; color: var(--text-secondary);">Tip: Press `~` anytime to instantly redirect to Classroom.</p>
+
+            <div class="modal-footer" style="display:flex; justify-content:flex-end; margin-top:10px;">
+                <button class="nav-btn" onclick="closeModal('settingsModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Updated Catalog with Drift Boss & Drift Balls
+        const games = [
+            { id: 'driftboss', title: 'Drift Boss', cat: 'sports', url: 'https://driftbossonline.github.io/' },
+            { id: 'driftballs', title: 'Drift Balls', cat: 'sports', url: 'https://basketbros.io/drift-balls/' },
+            { id: 'drivemad', title: 'Drive Mad', cat: 'sports', url: 'https://kdata1.com/2022/10/drive-mad/' },
+            { id: 'tag', title: 'Tag', cat: 'arcade', url: 'https://taggameunblocked.github.io/' },
+            { id: 'escaperoad', title: 'Escape Road', cat: 'sports', url: 'https://escaperoadx.github.io/' },
+            { id: 'basketbros', title: 'Basket Bros', cat: 'sports', url: 'https://basketbros.io/' },
+            { id: 'raftwars', title: 'Raft Wars', cat: 'arcade', url: 'https://raftwars.github.io/' },
+            { id: 'retro', title: 'Retro Bowl', cat: 'sports', url: 'https://retrobowl-76.github.io/' },
+            { id: 'motox3m', title: 'Moto X3M', cat: 'sports', url: 'https://motox3m_2.github.io/' },
+            { id: 'motox3m2', title: 'Moto X3M 2', cat: 'sports', url: 'https://motox3m2.github.io/' },
+            { id: 'vex7', title: 'Vex 7', cat: 'arcade', url: 'https://funny-school.github.io/game/vex7/' },
+            { id: 'vex6', title: 'Vex 6', cat: 'arcade', url: 'https://vex6.github.io/' },
+            { id: 'vex5', title: 'Vex 5', cat: 'arcade', url: 'https://vex5.github.io/' },
+            { id: 'soccerrandom', title: 'Soccer Random', cat: 'sports', url: 'https://soccerrandom.github.io/' },
+            { id: 'basketrandom', title: 'Basket Random', cat: 'sports', url: 'https://basketrandom.github.io/' },
+            { id: 'tunnelrush', title: 'Tunnel Rush', cat: 'arcade', url: 'https://tunnelrush.github.io/' },
+            { id: 'peopleplay', title: 'People Playground', cat: 'sandbox', url: 'https://people-playground.github.io/' },
+            { id: 'basketballlegends', title: 'Basketball Legends', cat: 'sports', url: 'https://basketballlegends.github.io/' },
+            { id: '2048', title: '2048', cat: 'arcade', url: 'https://play2048.co/' },
+            { id: 'slope', title: 'Slope Unblocked', cat: 'arcade', url: 'https://slopegame.github.io/' },
+            { id: 'ovo', title: 'OvO', cat: 'arcade', url: 'https://ovogame.github.io/' },
+            { id: 'stickman', title: 'Stickman Hook', cat: 'arcade', url: 'https://stickmanhook.github.io/' },
+            { id: 'breakout', title: 'Idle Breakout', cat: 'sandbox', url: 'https://idlebreakout-game.github.io/' },
+            { id: 'flappy', title: 'Flappy Bird', cat: 'arcade', url: 'https://flappybird.io/' },
+            { id: 'penalty', title: 'Penalty Shooters 2', cat: 'sports', url: 'https://penaltyshooters2.github.io/' },
+            { id: 'blumgi', title: 'Blumgi Ball', cat: 'sports', url: 'https://blumgiball.github.io/' },
+            { id: 'paperio2', title: 'Paper.io 2', cat: 'sandbox', url: 'https://paperio2.github.io/' },
+            { id: 'temple', title: 'Temple Run 2', cat: 'arcade', url: 'https://templerun2.github.io/' },
+            { id: 'subway', title: 'Subway Surfers', cat: 'arcade', url: 'https://subwaysurfers.github.io/' },
+            { id: 'getaway', title: 'Getaway Shootout', cat: 'sports', url: 'https://getawayshootout.github.io/' },
+            { id: 'rooftop', title: 'Rooftop Snipers', cat: 'sports', url: 'https://rooftopsnipers.github.io/' },
+            { id: 'boxing', title: 'Boxing Random', cat: 'sports', url: 'https://boxingrandom.github.io/' },
+            { id: 'volleyball', title: 'Volleyball Random', cat: 'sports', url: 'https://volleyballrandom.github.io/' },
+            { id: 'house', title: 'House of Hazards', cat: 'arcade', url: 'https://houseofhazards.github.io/' },
+            { id: 'badicecream', title: 'Bad Ice Cream', cat: 'arcade', url: 'https://badicecream.github.io/' },
+            { id: 'fireboy', title: 'Fireboy & Watergirl', cat: 'arcade', url: 'https://fireboyandwatergirl.github.io/' },
+            { id: 'ducklife', title: 'Duck Life', cat: 'sandbox', url: 'https://ducklife.github.io/' },
+            { id: 'papasburgeria', title: 'Papa\'s Burgeria', cat: 'sandbox', url: 'https://papasburgeria.github.io/' },
+            { id: 'papaspizzeria', title: 'Papa\'s Pizzeria', cat: 'sandbox', url: 'https://papaspizzeria.github.io/' },
+            { id: 'iron', title: 'Iron Snout', cat: 'arcade', url: 'https://ironsnout.github.io/' },
+            { id: 'helix', title: 'Helix Jump', cat: 'arcade', url: 'https://helixjump.github.io/' },
+            { id: 'stack', title: 'Stack', cat: 'arcade', url: 'https://stackgame.github.io/' },
+            { id: 'geometrydash', title: 'Geometry Dash', cat: 'arcade', url: 'https://geometrydash.github.io/' },
+            { id: 'run3', title: 'Run 3', cat: 'arcade', url: 'https://run3.github.io/' },
+            { id: 'happywheels', title: 'Happy Wheels Web', cat: 'sandbox', url: 'https://happywheels.github.io/' },
+            { id: 'krunker', title: 'Krunker.io', cat: 'sandbox', url: 'https://krunker.io/' },
+            { id: 'shellshock', title: 'Shell Shockers', cat: 'sandbox', url: 'https://shellshock.io/' },
+            { id: 'smashkarts', title: 'Smash Karts', cat: 'sandbox', url: 'https://smashkarts.io/' }
+        ];
+
+        let currentCategory = 'all';
+
+        function renderGames(filterText = '') {
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = '';
+
+            const filtered = games.filter(g => {
+                const matchesCat = currentCategory === 'all' || g.cat === currentCategory;
+                const matchesSearch = g.title.toLowerCase().includes(filterText.toLowerCase());
+                return matchesCat && matchesSearch;
+            });
+
+            filtered.forEach(g => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.onclick = () => launchGame(g);
+                card.innerHTML = `
+                    <div class="game-banner">${g.title}</div>
+                    <div class="game-info">
+                        <span class="game-title">${g.title}</span>
+                        <span class="game-cat">${g.cat.toUpperCase()}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function launchGame(game) {
+            document.getElementById('gameGridView').style.display = 'none';
+            document.getElementById('gamePlayerView').style.display = 'flex';
+            document.getElementById('activeGameTitle').innerText = game.title;
+            document.getElementById('gameFrame').src = game.url;
+        }
+
+        function closeGame() {
+            document.getElementById('gameFrame').src = '';
+            document.getElementById('gamePlayerView').style.display = 'none';
+            document.getElementById('gameGridView').style.display = 'block';
+        }
+
+        function setCategory(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderGames(document.getElementById('searchInput').value);
+        }
+
+        function filterGames() {
+            renderGames(document.getElementById('searchInput').value);
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        
+        function submitRequest() {
+            const title = document.getElementById('reqGameTitle').value;
+            if (title.trim() !== '') {
+                alert(`Success! Request submitted for: "${title}".`);
+                document.getElementById('reqGameTitle').value = '';
+                closeModal('requestModal');
+            } else {
+                alert('Please enter a game title.');
+            }
+        }
+
+        function changeTheme(theme) { document.body.setAttribute('data-theme', theme); }
+
+        function applyCloak(type) {
+            const favicon = document.getElementById('page-favicon');
+            if (type === 'classroom') {
+                document.title = 'Home - Google Classroom';
+                favicon.href = 'https://ssl.gstatic.com/classroom/ic_product_classic_144.png';
+            } else if (type === 'drive') {
+                document.title = 'My Drive - Google Drive';
+                favicon.href = 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_48dp.png';
+            } else {
+                document.title = 'Chocolates Tutoring - Study Portal';
+                favicon.href = 'https://ssl.gstatic.com/classroom/ic_product_classic_144.png';
+            }
+        }
+
+        function toggleFullscreen() {
+            const frame = document.getElementById('gameFrame');
+            if (frame.requestFullscreen) frame.requestFullscreen();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === '`' || e.key === '~') {
+                window.location.href = 'https://classroom.google.com';
+            }
+        });
+
+        renderGames();
+    </script>
+</body>
+</html>
